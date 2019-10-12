@@ -1,0 +1,43 @@
+@unit:50rem;
+*{
+    margin: 0;
+    padding: 0;
+}
+.bottomnav{
+    width: 100%;
+    height: 200/@unit;
+    position: fixed;
+    background: white;
+    left: 0;
+    bottom: 0;
+    color: gold;
+    border-top: 1px solid red;
+    ul{
+        overflow: hidden;
+        li{
+            width: 25%;
+            list-style: none;
+            float: left;
+            text-decoration: none;
+            text-align: center;
+            height: 200/@unit;
+            line-height: 150/@unit;
+            color: gold;
+            a{
+                color: #333;
+                text-decoration: none;
+            }
+            .iconfont{
+                font-size: 80/@unit;
+                display: block;
+                width: 300/@unit;
+                height: 75/@unit;
+                color: #333;
+                padding-bottom: 15/@unit;
+            }
+            .active{
+                color:red;
+            }
+        }
+    }
+}

@@ -1,0 +1,221 @@
+3. React易居客项目
+实现功能：封装网络请求、搭建服务器、页面跳转路由、数据获取、redus定义全局数据，登录注册，收藏，购物车，评论
+
+1.首页功能
+    1.创建项目结构
+        Pages：页面
+        Router：路由
+        Components：公共组件
+    2.搭建路由（相关文件）
+		Mock文件夹（自己搭建服务器）
+			Data(自己抒写的接口数据，用于请求传送)
+			Router.js（定义接口路径和请求成功返回的数据）
+			Index.js（自己搭建服务器的端口）
+		Src：setupProxy.js:（解决自己搭建服务器的跨域问题）
+    3.处理公共文件和样式
+        1.创建static文件夹处理公共资源
+			内部不请求数据，引用外部数据
+        2.支持Less
+			拉取配置支持：
+npm run eject  
+安装文件
+npm i -D less less-loader
+配置文件（默认不支持less，手动配置less）
+Config文件夹下webpack.config.js文件
+
+        3.增加公共样式
+    4.实现底部导航
+        1.加载字体图标
+            iconfont
+				
+            icomoon
+    5.顶部导航
+        1.REM的使用
+        2.命名规则：主名称+子名称  Home_Header_Nav
+6.使用第三方UI组件Swiper
+        1.安装
+            npm install --save react-swipeable-views
+        2.看文档：https://react-swipeable-views.com/
+    7.编写服务器代码
+        增加homehot1和homthot2接口
+Mock文件夹router.js下实现
+    8.前台实现接口
+        1.解决跨域问题
+Src：setupProxy.js
+        2.封装网络请求
+			Src文件夹下utils下文件夹下http.js
+        3.实现接口
+        4.视图渲染
+            智能组件
+            木偶组件
+2.配置快捷运行
+    1.服务器自动更新
+        1.安装依赖
+            npm install -g nodemon
+        2.增加nodemon的配置选项
+            nodemon.json
+        3.修改服务器端代码
+            启动:nodemon index.js
+    2.客户端服务器端同步启动
+        1.安装
+            npm install -g concurrently
+        2.修改package.json文件，增加同时运行的配置
+            "dev": "concurrently \"npm start\" \" nodemon mock/index.js \""
+
+3.城市选择
+    1.配置城市选择的路由
+2.公共Header头
+	History方法只在直接路由的页面内存在，就是在router/app.js内引用过的组件，其他被引入的子组件内不存在history，可以引入
+import {withRouter} from "react-router-dom"
+使用导出export default withRouter(Findnav)
+
+1.	路由的history.push方法（可以跳转到指定界面）
+This.props.history.push("/")
+        2.路由withRouter对象
+        3.window.history.back() （返回上一层界面）
+3.当前城市显示
+Src文件夹内pages内创建layout.jsx文件，在app.js内引入，套在最外层，作为公共数据的出处
+    4.城市选择
+	事件传递参数
+onClick={(e)=>this.事件名称(参数,e)}
+	通过函数e接受参数
+    5.创建Redux实现city的存储
+        1.安装
+			npm install --save redux
+        	npm install --save react-redux
+        	npm install --save-dev redux-devtools
+
+        2.创建结构
+			创建文件
+			Src文件夹内创建文件
+1.	Actions文件夹
+定义并导出函数和数据
+2.	Constants文件夹
+定义函数类型的字符串的大小写的锁定，避免出错
+3.	Reducers文件夹
+City.js：定义执行的操作和返回的是数据
+Index.js：合并导出，不止一个reducers文件
+4.	Store文件夹
+定义，关联Reducers
+修改文件
+1.	src文件夹下的index.js
+import initStore from "./store"
+import { Provider } from "react-redux"
+import "./static/icon/iconfont.css"
+const store = initStore();
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>, 
+document.getElementById('root'));
+2.	修改引入数据页面
+引入模板
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import * as ctiyActions from "../../actions/city"
+ 初始化数据方法
+this.props.cityActions.initCity({
+            cityname:"上海"   // 可以搞成定位获取
+        })
+修改数据方法
+this.props.ctiyActions.updateCity({
+            cityname:cityname
+        })
+获取数据{this.props.city.cityname}
+
+// redux读取方案
+function mapStateToProps(state) {
+    return {
+        counter: state.counter,
+        city:state.city
+    };
+}
+
+// redux写入方案
+function mapDispatchToProps(dispatch) {
+    return {
+        counterActions: bindActionCreators(counterActions, dispatch),
+        cityActions:bindActionCreators(cityActions,dispatch)
+    }
+}
+//导出
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(App)
+
+
+    6.组件关联Redux
+7.城市信息的切换
+
+4.搜索功能
+1.列表数据渲染
+请求数据带参数
+Api：
+getSearch(Keywords){
+        return httpGet(base.baseUrl + base.search+"?keywords="+Keywords);
+    }
+Router：
+router.get("/search",function(req,res){
+    let Keywords=url.parse(req.url,true).query.Keywords;
+    console.log(Keywords)
+    res.send(Searchdata)
+})
+
+    2.加载更多
+        触底判断，节流防抖！！！
+
+// 视口高度
+        const winHeight = document.documentElement.clientHeight;
+        let timer = null;
+        window.addEventListener("scroll", () => {
+            // getBoundingClientRect:left right top bottom:以文档为标准
+            if (this.load.current) { // 避免元素未加载一起的错误信息!!!
+                let scrollHeight = this.load.current.getBoundingClientRect().top
+                if (timer) {
+                    clearTimeout(timer)
+                }
+                // 最后一次
+                timer = setTimeout(() => {
+                    if (winHeight > scrollHeight) {
+                        this.props.onLoadMore()
+                        // 每次只加载一次：防抖和节流  借助定时器
+                    }
+                }, 300)
+            }
+        })
+
+    3.再次搜索
+        1.生命周期函数理解
+          https://gitee.com/iwensxt/new-web-interview/blob/master/questions/React/React%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E8%87%AA%E5%B7%B1%E7%9A%84%E7%90%86%E8%A7%A3.md
+
+4.搜索返回数据处理
+        1.redux存储每一次搜索的内容
+        2.将redux写入到SearchInput中
+5.面试题：https://gitee.com/iwensxt/new-web-interview
+5.登录注册
+
+本地存储：
+//数据写入本地
+    // localStorage.setItem('nick', data[0].uname)
+    // //生命周期函数渲染页面完成
+    // // 删除本地数据
+    // localStorage.removeItem('nick')
+    componentWillMount() {
+        // 判断本地是否存在数据
+        if (localStorage.getItem("nike")) {
+            this.setState({
+                islog: true,
+                nike: localStorage.getItem("nike")
+            })
+        }
+        localStorage.setItem('nick', "2")
+    }
+Redux存储：
+this.props.loginActions.login({
+          username: data[0].username
+      })
+
+
+Shopcar文件夹下的index.jsx是hook语句
+
